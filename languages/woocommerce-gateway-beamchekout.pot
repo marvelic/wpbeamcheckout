@@ -1,0 +1,248 @@
+# Copyright (C) 2023 Marvelic
+# This file is distributed under the same license as the BeamCheckout Payment Gateway plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: BeamCheckout Payment Gateway 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/woocommerce-gateway-beamchekout\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2023-06-23T09:45:35+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.8.1\n"
+"X-Domain: woocommerce-gateway-beamcheckout\n"
+
+#. Plugin Name of the plugin
+msgid "BeamCheckout Payment Gateway"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+msgid "https://marvelic.co.th"
+msgstr ""
+
+#. Description of the plugin
+msgid "Accept payments via Gateway Template."
+msgstr ""
+
+#. Author of the plugin
+msgid "Marvelic.co.th"
+msgstr ""
+
+#: includes/Admin/Assets.php:51
+msgid "Request Error. Try Again."
+msgstr ""
+
+#: includes/Admin/Main.php:74
+msgid "View Plugin settings"
+msgstr ""
+
+#: includes/Admin/Main.php:74
+msgid "Gateway Settings"
+msgstr ""
+
+#: includes/Ajax/Base.php:96
+msgid "You must be logged in"
+msgstr ""
+
+#: includes/Ajax/Base.php:104
+msgid "Action failed. Please try again."
+msgstr ""
+
+#: includes/Ajax/Order.php:65
+msgid "payment complete"
+msgstr ""
+
+#: includes/Ajax/Order.php:74
+msgid "Error"
+msgstr ""
+
+#: includes/Ajax/Order.php:95
+msgid "is valid X_HUB_SIGNATURE"
+msgstr ""
+
+#: includes/Ajax/Order.php:108
+msgid "Wrong data"
+msgstr ""
+
+#: includes/Ajax/Order.php:118
+msgid "Wrong not merchantId"
+msgstr ""
+
+#: includes/Ajax/Order.php:132
+msgid "data is valid"
+msgstr ""
+
+#: includes/Ajax/Order.php:146
+msgid "Wrong order"
+msgstr ""
+
+#: includes/Api/Base.php:94
+msgid "Authorization data is not specified "
+msgstr ""
+
+#: includes/Api/Base.php:152
+msgid "Api request decoding error"
+msgstr ""
+
+#: includes/Api/BeamCheckoutPurchaseApi.php:35
+msgid "Not paymentLink Or purchaseId"
+msgstr ""
+
+#: includes/Api/BeamCheckoutRefundPurchaseApi.php:42
+#: includes/Api/BeamCheckoutRefundPurchaseApi.php:71
+msgid "Not purchaseId"
+msgstr ""
+
+#: includes/Api/BeamCheckoutRefundPurchaseApi.php:51
+msgid "Not refund option"
+msgstr ""
+
+#: includes/Api/BeamCheckoutRefundPurchaseApi.php:77
+msgid "Not type"
+msgstr ""
+
+#: includes/Api/BeamCheckoutRefundPurchaseApi.php:81
+msgid "The amount to be refunded is 0"
+msgstr ""
+
+#: includes/Api/BeamCheckoutRefundPurchaseApi.php:93
+msgid "Not refund"
+msgstr ""
+
+#: includes/Gateway.php:34
+#: includes/Gateway.php:35
+msgid "Beam Checkout"
+msgstr ""
+
+#: includes/Gateway.php:68
+msgid "Enable/Disable"
+msgstr ""
+
+#: includes/Gateway.php:69
+msgid "Enable Gateway"
+msgstr ""
+
+#: includes/Gateway.php:75
+msgid "Title"
+msgstr ""
+
+#: includes/Gateway.php:77
+msgid "This controls the title which the user sees during checkout."
+msgstr ""
+
+#: includes/Gateway.php:82
+msgid "Description"
+msgstr ""
+
+#: includes/Gateway.php:84
+msgid "This controls the description which the user sees during checkout."
+msgstr ""
+
+#: includes/Gateway.php:91
+msgid "Merchant ID"
+msgstr ""
+
+#: includes/Gateway.php:94
+msgid "Provide your Beam merchant id"
+msgstr ""
+
+#: includes/Gateway.php:97
+msgid "API Key"
+msgstr ""
+
+#: includes/Gateway.php:100
+#: includes/Gateway.php:123
+msgid "Provide the API key that has been generated for you"
+msgstr ""
+
+#: includes/Gateway.php:104
+msgid "HMAC Key"
+msgstr ""
+
+#: includes/Gateway.php:111
+msgid "Test mode"
+msgstr ""
+
+#: includes/Gateway.php:112
+msgid "Enable Test Mode"
+msgstr ""
+
+#: includes/Gateway.php:114
+msgid "Place the payment gateway in test mode using test API keys."
+msgstr ""
+
+#: includes/Gateway.php:120
+msgid "TEST API Key"
+msgstr ""
+
+#: includes/Gateway.php:127
+msgid "TEST HMAC Key"
+msgstr ""
+
+#: includes/Gateway.php:134
+msgid "Channel"
+msgstr ""
+
+#: includes/Gateway.php:141
+msgid "Supported Payment Methods"
+msgstr ""
+
+#: includes/Gateway.php:155
+msgid "Supported Payment Methods overrides the merchants default payment method setting Payment method specified here must be enabled by the merchant"
+msgstr ""
+
+#: includes/Gateway.php:159
+msgid "Allow order cancellation"
+msgstr ""
+
+#: includes/Gateway.php:161
+msgid "Allows you to cancel an order and cancel a payment"
+msgstr ""
+
+#: includes/Gateway.php:167
+msgid "Refund of funds"
+msgstr ""
+
+#: includes/Gateway.php:169
+msgid "Allows you to make a refund"
+msgstr ""
+
+#: includes/Gateway.php:175
+msgid "Webhook Url"
+msgstr ""
+
+#: includes/Gateway.php:185
+msgid "Logging"
+msgstr ""
+
+#: includes/Gateway.php:186
+msgid "Log debug messages"
+msgstr ""
+
+#: includes/Gateway.php:188
+msgid "Save debug messages to the WooCommerce System Status log."
+msgstr ""
+
+#: includes/Gateway.php:300
+msgid "Request error. Try again or contact us"
+msgstr ""
+
+#: includes/Gateway.php:349
+#: includes/Gateway.php:390
+msgid "Payment cancelled"
+msgstr ""
+
+#: templates/admin/order-metabox.php:20
+msgid "Purchase ID"
+msgstr ""
+
+#: templates/admin/order-metabox.php:31
+msgid "Payment link"
+msgstr ""
+
+#: templates/admin/order-metabox.php:38
+msgid "Status"
+msgstr ""
