@@ -14,4 +14,5 @@ Short description
 Full description
 
 == Changelog ==
+v 1.9.1 - Check payments with Beam directly when the webhook is not received (order-received page, before WooCommerce auto-cancels an unpaid order, and every 5 minutes); stop logging credentials and customer data; constant-time webhook signature check and reject an empty HMAC key; back off on 429/5xx; unschedule on deactivation
 v 1.0.0 - Release

@@ -61,11 +61,22 @@ abstract class Base
         beamcheckout()->log(
             array(
                 'merchant_id' => $merchant_id,
-                'key' => $key
+                'key' => self::mask_secret($key),
             )
         );
 
         return $this->authorization = 'Basic ' . base64_encode($merchant_id . ':' . $key);
+    }
+
+    /**
+     * Mask a secret for logs: never write credentials in full.
+     *
+     * @param string $secret Secret value.
+     * @return string
+     */
+    protected static function mask_secret(string $secret): string
+    {
+        return '' === $secret ? '' : str_repeat('*', 8) . ' (' . strlen($secret) . ' chars)';
     }
 
     /**
@@ -109,12 +120,18 @@ abstract class Base
             ],
         );
 
+        // Log only what is needed to debug (endpoint, status, request id). Never credentials,
+        // customer data or the order key that is part of the redirect URL.
+        $log_body = $body;
+        if (isset($log_body['redirectUrl']) && is_string($log_body['redirectUrl'])) {
+            $log_body['redirectUrl'] = strtok($log_body['redirectUrl'], '?');
+        }
+
         beamcheckout()->log(
             array(
-                'url' => $url,
+                'endpoint' => $endpoint,
                 'method' => $method,
-                'body' => $body,
-                'params' => $params,
+                'body' => $log_body,
             )
         );
 
@@ -123,20 +140,41 @@ abstract class Base
         if (is_wp_error($res)) {
             beamcheckout()->log(
                 array(
+                    'endpoint' => $endpoint,
                     'error' => $res->get_error_message(),
                 )
             );
 
-            throw new Exception($res->get_error_message());
-        }elseif (wp_remote_retrieve_response_code($res) > 299){
-            throw new Exception($res['body']);
+            // Code 0 = no HTTP response (timeout, DNS, TLS ...).
+            throw new Exception($res->get_error_message(), 0);
+        }
+
+        $status_code = (int) wp_remote_retrieve_response_code($res);
+        $request_id  = wp_remote_retrieve_header($res, 'x-beam-request-id');
+
+        if ($status_code > 299) {
+            beamcheckout()->log(
+                array(
+                    'endpoint' => $endpoint,
+                    'status' => $status_code,
+                    'request_id' => $request_id,
+                    'error' => substr((string) $res['body'], 0, 300),
+                )
+            );
+
+            // The HTTP status is the exception code so callers can tell 429/5xx (retry later) from 4xx.
+            throw new Exception($res['body'], $status_code);
         }
 
         $res_body = json_decode($res['body'], true);
 
         beamcheckout()->log(
             array(
-                'response' => $res,
+                'endpoint' => $endpoint,
+                'status' => $status_code,
+                'request_id' => $request_id,
+                'purchaseId' => is_array($res_body) ? ($res_body['purchaseId'] ?? null) : null,
+                'state' => is_array($res_body) ? ($res_body['state'] ?? null) : null,
             )
         );
 
@@ -144,8 +182,10 @@ abstract class Base
         if (!empty($res['body']) && is_null($res_body)) {
             beamcheckout()->log(
                 array(
+                    'endpoint' => $endpoint,
+                    'status' => $status_code,
+                    'request_id' => $request_id,
                     'error' => 'wrong body',
-                    'body' => $res['body'],
                 )
             );
 

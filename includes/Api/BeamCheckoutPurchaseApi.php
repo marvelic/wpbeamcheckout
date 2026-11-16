@@ -42,6 +42,27 @@ class BeamCheckoutPurchaseApi extends Base
 
 
     /**
+     * Read the purchase from Beam and let API errors bubble up.
+     *
+     * The exception code is the HTTP status (0 when there was no response), so the
+     * caller can back off on 429 / 5xx / timeouts as Beam's docs require.
+     *
+     * @param BeamCheckoutEntity $order
+     * @return array
+     * @throws Exception
+     */
+    public function fetch(BeamCheckoutEntity $order): array
+    {
+        if (!$purchase_id = $order->get_purchase_id()) {
+            throw new Exception('No purchase id', 404);
+        }
+
+        $merchant_id = beamcheckout()->get_option('merchant_id');
+
+        return $this->request("purchases/{$merchant_id}/{$purchase_id}");
+    }
+
+    /**
      * @param BeamCheckoutEntity $order
      * @return array|false
      * @throws Exception

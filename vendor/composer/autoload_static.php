@@ -24,6 +24,7 @@ class ComposerStaticInit99c4270496913beb1d0563d9af4de55a
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Marvelic\\BeamCheckout\\Actions\\Main' => __DIR__ . '/../..' . '/includes/Actions/Main.php',
         'Marvelic\\BeamCheckout\\Actions\\Order' => __DIR__ . '/../..' . '/includes/Actions/Order.php',
+        'Marvelic\\BeamCheckout\\Actions\\Reconcile' => __DIR__ . '/../..' . '/includes/Actions/Reconcile.php',
         'Marvelic\\BeamCheckout\\Admin\\Assets' => __DIR__ . '/../..' . '/includes/Admin/Assets.php',
         'Marvelic\\BeamCheckout\\Admin\\Main' => __DIR__ . '/../..' . '/includes/Admin/Main.php',
         'Marvelic\\BeamCheckout\\Admin\\Metaboxes\\Main' => __DIR__ . '/../..' . '/includes/Admin/Metaboxes/Main.php',

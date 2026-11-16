@@ -53,6 +53,28 @@ class Order extends Base
     {
         $order = $this->get_order_from_get_request();
 
+        // Already paid (e.g. confirmed by the API check or a webhook retry): acknowledge so Beam stops retrying.
+        if ($this->state === 'complete' && $order->order()->is_paid()) {
+            wp_send_json_success(
+                array(
+                    'success' => true,
+                    'message' => __('payment already complete', 'woocommerce-gateway-beamcheckout'),
+                )
+            );
+        }
+
+        // Only "complete" is a payment result for this event. Acknowledge anything else with 2xx
+        // so Beam does not retry something we will never act on.
+        if ($this->state !== 'complete') {
+            beamcheckout()->log(array('event' => 'webhook ignored', 'state' => $this->state));
+            wp_send_json_success(
+                array(
+                    'success' => true,
+                    'message' => __('ignored', 'woocommerce-gateway-beamcheckout'),
+                )
+            );
+        }
+
         if ($this->state === 'complete' && $order->order()->payment_complete($this->transaction_id)) {
 
             $order->order()->add_order_note(__('Payment complete', 'woocommerce'));
@@ -86,10 +108,21 @@ class Order extends Base
     {
         $data = file_get_contents('php://input');
 
-	    beamcheckout()->log( [
-		    '$data'    => $data,
-		    '$_SERVER' => $_SERVER,
-	    ] );
+        // Log only what is needed to diagnose delivery problems. Never the body (customer data / PII,
+        // see Beam go-live checklist), the full $_SERVER or the signature itself.
+        beamcheckout()->log(
+            array(
+                'event'           => 'webhook received',
+                'remote_addr'     => sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'] ?? '')),
+                'forwarded_for'   => sanitize_text_field(wp_unslash($_SERVER['HTTP_X_FORWARDED_FOR'] ?? '')),
+                'user_agent'      => sanitize_text_field(wp_unslash($_SERVER['HTTP_USER_AGENT'] ?? '')),
+                'method'          => sanitize_text_field(wp_unslash($_SERVER['REQUEST_METHOD'] ?? '')),
+                'beam_event'      => sanitize_text_field(wp_unslash($_SERVER['HTTP_X_BEAM_EVENT'] ?? '')),
+                'notification_id' => sanitize_text_field(wp_unslash($_SERVER['HTTP_X_BEAM_WEBHOOK_NOTIFICATION_ID'] ?? '')),
+                'has_signature'   => isset($_SERVER['HTTP_X_HUB_SIGNATURE']),
+                'body_bytes'      => strlen($data),
+            )
+        );
 
         if(!$this->validate_request($data)){
             beamcheckout()->log('X_HUB_SIGNATURE is invalid');
@@ -138,17 +171,27 @@ class Order extends Base
             );
         }
 
+        beamcheckout()->log(
+            array(
+                'event'      => 'webhook accepted',
+                'purchaseId' => $purchase_id,
+                'state'      => $this->state,
+            )
+        );
+
         $order = BeamCheckoutEntity::get_order_by_purchase_id($purchase_id);
 
         if (!$order ||
             $order->order()->get_payment_method() !== beamcheckout()->get_option('plugin_id')
         ) {
             beamcheckout()->log('Wrong order');
+            // 404 (not 2xx): Beam retries non-2xx up to 10 times, which helps if the order is not saved yet.
             wp_send_json_error(
                 array(
                     'success' => false,
                     'message' => __('Wrong order', 'woocommerce-gateway-beamcheckout'),
-                )
+                ),
+                404
             );
         }
 
@@ -169,9 +212,14 @@ class Order extends Base
 
         $signature = sanitize_text_field(wp_unslash($_SERVER['HTTP_X_HUB_SIGNATURE']));
 
-        $key = base64_decode(beamcheckout()->get_option('private_key'));
+        $key = base64_decode((string) beamcheckout()->get_option('private_key'));
 
-        return $signature === hash_hmac('sha256', $data, $key);
+        // Without a configured HMAC key anyone could compute a valid signature.
+        if (!is_string($key) || '' === $key) {
+            return false;
+        }
+
+        return hash_equals(hash_hmac('sha256', $data, $key), $signature);
     }
 
 

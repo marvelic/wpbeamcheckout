@@ -12,7 +12,7 @@
  * WC tested up to: 8.0
  * Requires at least: 5.7
  * Requires PHP: 7.4
- * Version: 1.9.0
+ * Version: 1.9.1
  *
  * @package Marvelic\BeamCheckout
  */
@@ -48,7 +48,7 @@ class Main
 	 *
 	 * @var string
 	 */
-	private string $version = '1.9.0';
+	private string $version = '1.9.1';
 
 	/**
 	 * Plugin url
@@ -189,7 +189,13 @@ class Main
 	/**
 	 * Deactivation hook
 	 */
-	public function deactivation_hook() {}
+	public function deactivation_hook()
+	{
+		// Stop the recurring payment check so it does not keep running (and failing) without the plugin.
+		if (function_exists('as_unschedule_all_actions')) {
+			as_unschedule_all_actions('beamcheckout_reconcile_orders', array(), 'beamcheckout');
+		}
+	}
 
 	/**
 	 * Get Gateway setting

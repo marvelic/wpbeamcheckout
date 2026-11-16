@@ -21,6 +21,7 @@ class Main {
      */
     public function __construct() {
         new Order();
+        new Reconcile();
     }
 }
 

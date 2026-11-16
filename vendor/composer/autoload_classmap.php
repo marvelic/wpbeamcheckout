@@ -9,6 +9,7 @@ return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Marvelic\\BeamCheckout\\Actions\\Main' => $baseDir . '/includes/Actions/Main.php',
     'Marvelic\\BeamCheckout\\Actions\\Order' => $baseDir . '/includes/Actions/Order.php',
+    'Marvelic\\BeamCheckout\\Actions\\Reconcile' => $baseDir . '/includes/Actions/Reconcile.php',
     'Marvelic\\BeamCheckout\\Admin\\Assets' => $baseDir . '/includes/Admin/Assets.php',
     'Marvelic\\BeamCheckout\\Admin\\Main' => $baseDir . '/includes/Admin/Main.php',
     'Marvelic\\BeamCheckout\\Admin\\Metaboxes\\Main' => $baseDir . '/includes/Admin/Metaboxes/Main.php',
